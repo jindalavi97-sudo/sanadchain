@@ -1,0 +1,74 @@
+name: "sanadchain-network"
+version: "1.0.0"
+
+client:
+  organization: SanadAuthority
+  connection:
+    timeout:
+      peer:
+        endorser: '300'
+
+channels:
+  sanadchannel:
+    orderers:
+      - orderer.sanadchain.gov
+    peers:
+      peer0.sanadauthority.sanadchain.gov:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      peer0.abcuniv.edu:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      peer0.xyzinstitute.ac.in:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      peer0.nationalcollege.edu:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+organizations:
+  SanadAuthority:
+    mspid: SanadAuthorityMSP
+    cryptoPath: /crypto/peerOrganizations/sanadauthority.sanadchain.gov/users/{username}@sanadauthority.sanadchain.gov/msp
+    peers:
+      - peer0.sanadauthority.sanadchain.gov
+    certificateAuthorities:
+      - ca.sanadauthority.sanadchain.gov
+
+  ABCUniversity:
+    mspid: ABCUniversityMSP
+    cryptoPath: /crypto/peerOrganizations/abcuniv.edu/users/{username}@abcuniv.edu/msp
+    peers:
+      - peer0.abcuniv.edu
+    certificateAuthorities:
+      - ca.abcuniv.edu
+
+  XYZInstitute:
+    mspid: XYZInstituteMSP
+    cryptoPath: /crypto/peerOrganizations/xyzinstitute.ac.in/users/{username}@xyzinstitute.ac.in/msp
+    peers:
+      - peer0.xyzinstitute.ac.in
+    certificateAuthorities:
+      - ca.xyzinstitute.ac.in
+
+  NationalCollege:
+    mspid: NationalCollegeMSP
+    cryptoPath: /crypto/peerOrganizations/nationalcollege.edu/users/{username}@nationalcollege.edu/msp
+    peers:
+      - peer0.nationalcollege.edu
+    certificateAuthorities:
+      - ca.nationalcollege.edu
+
+orderers:
+  orderer.sanadchain.gov:
+    url: grpcs://localhost:7050
+    grpcOptions:
+      ssl-target-name-override: orderer.sanadchain.gov

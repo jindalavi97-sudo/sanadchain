@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # 1. PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: sanad_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: sanad_admin
+      POSTGRES_PASSWORD: sanad_secure_password_2026
+      POSTGRES_DB: sanadchain_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - sanad_net
+
+  # 2. SanadChain Core API Server
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sanad_api
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      DATABASE_URL: postgres://sanad_admin:sanad_secure_password_2026@postgres:5432/sanadchain_db
+      JWT_SECRET: sanadchain-super-secure-production-jwt-secret-2026
+      MOCK_BLOCKCHAIN: "true"
+      FABRIC_CHANNEL: sanadchannel
+      FABRIC_CHAINCODE: sanad-credential-contract
+      NAD_MODE: mock
+    ports:
+      - "3000:3000"
+    networks:
+      - sanad_net
+
+networks:
+  sanad_net:
+    driver: bridge
+
+volumes:
+  pgdata:

@@ -1,0 +1,65 @@
+version: '3.8'
+
+networks:
+  sanad_fabric_net:
+    name: sanad_fabric_net
+
+volumes:
+  orderer.sanadchain.gov:
+  peer0.sanadauthority.sanadchain.gov:
+  peer0.abcuniv.edu:
+  peer0.xyzinstitute.ac.in:
+  peer0.nationalcollege.edu:
+
+services:
+  orderer.sanadchain.gov:
+    image: hyperledger/fabric-orderer:2.5
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_TLS_ENABLED=false
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    ports:
+      - 7050:7050
+    networks:
+      - sanad_fabric_net
+
+  peer0.sanadauthority.sanadchain.gov:
+    image: hyperledger/fabric-peer:2.5
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=sanad_fabric_net
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=peer0.sanadauthority.sanadchain.gov
+      - CORE_PEER_ADDRESS=peer0.sanadauthority.sanadchain.gov:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.sanadauthority.sanadchain.gov:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_LOCALMSPID=SanadAuthorityMSP
+      - CORE_PEER_TLS_ENABLED=false
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    ports:
+      - 7051:7051
+    networks:
+      - sanad_fabric_net
+
+  peer0.abcuniv.edu:
+    image: hyperledger/fabric-peer:2.5
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=sanad_fabric_net
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=peer0.abcuniv.edu
+      - CORE_PEER_ADDRESS=peer0.abcuniv.edu:8051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:8051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.abcuniv.edu:8052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8052
+      - CORE_PEER_LOCALMSPID=ABCUniversityMSP
+      - CORE_PEER_TLS_ENABLED=false
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    ports:
+      - 8051:8051
+    networks:
+      - sanad_fabric_net
