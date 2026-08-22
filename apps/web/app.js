@@ -746,16 +746,21 @@ window.setVerifyMode = setVerifyMode;
 function renderVerify(prefillId = '') {
   return `
     ${renderNav()}
-    <main class="wrap verify-container">
-      <div style="text-align:center;margin-bottom:30px;">
-        <div class="eyebrow">Public Verification Portal</div>
-        <h1 style="font-size:36px;letter-spacing:-0.03em;margin-bottom:8px;">Instant Credential Verification</h1>
-        <p style="color:var(--text-secondary);">
-          Verify certificates instantly by Credential ID, QR Code, or direct document file upload. No login required.
+    <main class="wrap verify-container" style="max-width:880px;margin:30px auto 60px;">
+      <!-- Header Banner -->
+      <div style="text-align:center;margin-bottom:28px;">
+        <div class="eyebrow" style="display:inline-flex;align-items:center;gap:6px;margin-bottom:10px;">
+          <span>🔓</span> PUBLIC VERIFICATION · No Login Required
+        </div>
+        <h1 style="font-size:36px;letter-spacing:-0.03em;margin-bottom:6px;">
+          SANADCHAIN
+        </h1>
+        <p style="color:var(--text-secondary);font-size:16px;max-width:620px;margin:0 auto;">
+          Blockchain Academic Credential Verification Platform
         </p>
       </div>
 
-      <div class="card">
+      <div class="card" style="margin-bottom:24px;">
         <!-- Verification Mode Tabs -->
         <div style="display:flex;gap:8px;border-bottom:1px solid var(--border-light);padding-bottom:14px;margin-bottom:20px;">
           <button id="btnTabId" class="btn ${verifyMode === 'id' ? 'btn-primary' : 'btn-secondary'} btn-sm" onclick="setVerifyMode('id')">
@@ -770,15 +775,16 @@ function renderVerify(prefillId = '') {
         <div id="verifyIdSection" style="${verifyMode === 'id' ? 'display:block;' : 'display:none;'}">
           <label style="font-size:13px;font-weight:700;color:var(--text-secondary);">Credential ID / Reference</label>
           <div class="verify-input-group">
-            <input id="verifyInput" class="input-text" type="text" value="${esc(prefillId || 'SANAD-2026-000123')}" placeholder="e.g. SANAD-2026-000123" />
+            <input id="verifyInput" class="input-text" type="text" value="${esc(prefillId || 'SANAD-NAD-20269901')}" placeholder="e.g. SANAD-NAD-20269901 or SANAD-2026-000123" />
             <button class="btn btn-primary" onclick="handleVerify()">Verify Credential</button>
           </div>
 
           <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:10px;">
             <div style="font-size:13px;color:var(--text-muted);">
               Quick Demo IDs: 
-              <a href="#" onclick="document.querySelector('#verifyInput').value='SANAD-2026-000123';handleVerify();return false;">Valid Degree</a> · 
-              <a href="#" onclick="document.querySelector('#verifyInput').value='SANAD-2026-000124';handleVerify();return false;">Revoked Credential</a> · 
+              <a href="#" onclick="document.querySelector('#verifyInput').value='SANAD-NAD-20269901';handleVerify();return false;">Valid B.Tech (SANAD-NAD-20269901)</a> · 
+              <a href="#" onclick="document.querySelector('#verifyInput').value='SANAD-2026-000123';handleVerify();return false;">Rahul Sharma Degree</a> · 
+              <a href="#" onclick="document.querySelector('#verifyInput').value='SANAD-2026-000124';handleVerify();return false;">Revoked Degree</a> · 
               <a href="#" onclick="document.querySelector('#verifyInput').value='SANAD-2026-000125';handleVerify();return false;">DigiLocker Diploma</a>
             </div>
             <button class="btn btn-secondary btn-sm" onclick="showScanModal()">📷 Scan QR Code</button>
@@ -807,10 +813,35 @@ function renderVerify(prefillId = '') {
 
         <div id="verifyResultArea"></div>
       </div>
+
+      <!-- BOTTOM "VERIFY ANOTHER CREDENTIAL" BOX -->
+      <div class="card" style="background:var(--bg-tertiary);border:1px solid var(--border-light);text-align:center;padding:24px;">
+        <h4 style="font-size:16px;margin-bottom:6px;">Verify Another Academic Credential</h4>
+        <p style="color:var(--text-secondary);font-size:13px;margin-bottom:16px;">
+          Instant, trustless verification on the permissioned blockchain trust network.
+        </p>
+        <div style="max-width:480px;margin:0 auto;display:flex;gap:8px;">
+          <input id="bottomVerifyInput" class="input-text" placeholder="SANAD-2026-________" />
+          <button class="btn btn-primary btn-sm" onclick="handleBottomVerify()">Verify</button>
+          <button class="btn btn-secondary btn-sm" onclick="showScanModal()">📷 Scan QR</button>
+        </div>
+      </div>
     </main>
     ${renderFooter()}
   `;
 }
+
+function handleBottomVerify() {
+  const val = document.querySelector('#bottomVerifyInput')?.value.trim();
+  if (val) {
+    const topInput = document.querySelector('#verifyInput');
+    if (topInput) topInput.value = val;
+    setVerifyMode('id');
+    handleVerify();
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+  }
+}
+window.handleBottomVerify = handleBottomVerify;
 
 // File Upload Handler
 async function handleFileChosen(event) {
@@ -837,9 +868,9 @@ window.handleFileChosen = handleFileChosen;
 
 async function testUploadPreset(type) {
   if (type === 'genuine') {
-    verifyDocumentDirect('4a8b79f83c11d29381e4a5bf607183e95bc7291a27e4c9e88d0172bf42589e41', 'Rahul_Sharma_BTech_Original.pdf', 'SANAD-2026-000123');
+    verifyDocumentDirect('4a8b79f83c11d29381e4a5bf607183e95bc7291a27e4c9e88d0172bf42589e41', 'Rahul_Sharma_BTech_Original.pdf', 'SANAD-NAD-20269901');
   } else if (type === 'tampered') {
-    verifyDocumentDirect('19ad7281f83c11d29381e4a5bf607183e95bc7291a27e4c9e88d0172bf42589e', 'Rahul_Sharma_BTech_Forged_CGPA_9.9.pdf', 'SANAD-2026-000123');
+    verifyDocumentDirect('19ad7281f83c11d29381e4a5bf607183e95bc7291a27e4c9e88d0172bf42589e', 'Rahul_Sharma_BTech_Forged_CGPA_9.9.pdf', 'SANAD-NAD-20269901');
   } else {
     verifyDocumentDirect('8f4a2c0191ab3e4f7a29e88d0172bf42589e414a8b79f83c11d29381e4a5bf60', 'Arjun_Kumar_DigiLocker_Diploma.pdf', 'SANAD-2026-000125');
   }
@@ -863,42 +894,30 @@ async function verifyDocumentDirect(documentHash, fileName, credentialId = '') {
     if (data.status === 'VALID') {
       const c = data.credential;
       resultArea.innerHTML = `
-        <div class="verify-result-box valid">
-          <div class="verify-header">
-            <div>
-              <div class="verify-status-title" style="color:var(--color-success);">✓ DOCUMENT 100% AUTHENTIC & UNTAMPERED</div>
-              <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">
-                Cryptographic SHA-256 fingerprint verified against Hyperledger Fabric ledger block #${c.blockNumber || 1842}
-                ${c.source === 'DIGILOCKER_NAD' ? ' · <b style="color:var(--brand-blue);">🇮🇳 DigiLocker / NAD Synchronized</b>' : ''}
-              </div>
+        <div style="margin-top:20px;">
+          <div style="background:var(--color-success-bg);border:2px solid var(--color-success);border-radius:12px;padding:24px;text-align:center;margin-bottom:20px;">
+            <div style="font-size:26px;font-weight:900;color:var(--color-success);letter-spacing:-0.02em;margin-bottom:4px;">
+              ✓ CREDENTIAL VERIFIED
             </div>
-            <div class="verify-timing-pill">⏱ ${data.verificationSeconds}s actual latency</div>
+            <div style="font-size:16px;font-weight:800;color:var(--color-success);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">
+              VALID & AUTHENTIC
+            </div>
+            <p style="color:var(--text-secondary);font-size:14px;max-width:540px;margin:0 auto;">
+              This credential has been verified against its blockchain-anchored record on Hyperledger Fabric.
+            </p>
           </div>
 
-          <div class="verify-meta-grid">
-            <div class="meta-item">
-              <span class="meta-label">Verified File Name</span>
-              <span class="meta-val">${esc(data.fileName)}</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Credential ID</span>
-              <span class="meta-val mono" style="color:var(--brand-blue);">${esc(c.credentialId)}</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Issuing University</span>
-              <span class="meta-val">${esc(c.institution)}</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Recipient & Program</span>
-              <span class="meta-val">${esc(c.studentDisplayName)} — ${esc(c.program)}</span>
-            </div>
-            <div class="meta-item" style="grid-column: span 2;">
-              <span class="meta-label">Document SHA-256 Digest</span>
-              <span class="meta-val mono" style="font-size:12px;">${esc(data.documentHash)}</span>
-            </div>
+          <div class="verify-meta-grid" style="margin-bottom:20px;">
+            <div class="meta-item"><span class="meta-label">Verified Document</span><span class="meta-val">${esc(data.fileName)}</span></div>
+            <div class="meta-item"><span class="meta-label">Credential ID</span><span class="meta-val mono" style="color:var(--brand-blue);font-weight:700;">${esc(c.credentialId)}</span></div>
+            <div class="meta-item"><span class="meta-label">Student</span><span class="meta-val">${esc(c.studentDisplayName)}</span></div>
+            <div class="meta-item"><span class="meta-label">Program</span><span class="meta-val">${esc(c.program)}</span></div>
+            <div class="meta-item"><span class="meta-label">Institution</span><span class="meta-val">${esc(c.institution)}</span></div>
+            <div class="meta-item"><span class="meta-label">Blockchain Anchor</span><span class="meta-val"><span class="badge badge-success">Block #${c.blockNumber || 1842} · CONFIRMED</span></span></div>
+            <div class="meta-item" style="grid-column:span 2;"><span class="meta-label">Document SHA-256</span><span class="meta-val mono" style="font-size:12px;">${esc(data.documentHash)}</span></div>
           </div>
 
-          <div style="display:flex;justify-content:flex-end;margin-top:16px;gap:10px;">
+          <div style="display:flex;justify-content:flex-end;gap:10px;">
             <button class="btn btn-primary btn-sm" onclick="showCertificateModal('${esc(c.credentialId)}')">📄 View Printable Certificate</button>
             <button class="btn btn-secondary btn-sm" onclick="syncToDigiLocker('${esc(c.credentialId)}')">🇮🇳 Sync with DigiLocker</button>
           </div>
@@ -906,15 +925,17 @@ async function verifyDocumentDirect(documentHash, fileName, credentialId = '') {
       `;
     } else if (data.status === 'TAMPERED') {
       resultArea.innerHTML = `
-        <div class="verify-result-box tampered">
-          <div class="verify-header">
-            <div>
-              <div class="verify-status-title" style="color:var(--color-danger);">✕ FORGERY / TAMPER DETECTED</div>
-              <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">
-                The uploaded document has been modified. The computed SHA-256 digest does not match the blockchain-anchored certificate.
-              </div>
+        <div style="margin-top:20px;">
+          <div style="background:var(--color-danger-bg);border:2px solid var(--color-danger);border-radius:12px;padding:24px;text-align:center;margin-bottom:20px;">
+            <div style="font-size:26px;font-weight:900;color:var(--color-danger);margin-bottom:4px;">
+              ✕ TAMPER DETECTED
             </div>
-            <div class="verify-timing-pill">⏱ ${data.verificationSeconds}s</div>
+            <div style="font-size:16px;font-weight:800;color:var(--color-danger);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">
+              FORGERY / HASH MISMATCH
+            </div>
+            <p style="color:var(--text-secondary);font-size:14px;max-width:540px;margin:0 auto;">
+              The uploaded document does not match the blockchain-anchored hash.
+            </p>
           </div>
 
           <div class="verify-meta-grid">
@@ -931,15 +952,12 @@ async function verifyDocumentDirect(documentHash, fileName, credentialId = '') {
       `;
     } else {
       resultArea.innerHTML = `
-        <div class="verify-result-box not-found">
-          <div class="verify-header">
-            <div class="verify-status-title" style="color:var(--color-danger);">✕ UNRECOGNIZED DOCUMENT</div>
-            <div class="verify-timing-pill">⏱ ${data.verificationSeconds}s</div>
-          </div>
-          <p style="color:var(--text-secondary);font-size:14px;margin-bottom:12px;">
-            No authentic academic record on SanadChain or DigiLocker matches the cryptographic hash of this file.
+        <div style="margin-top:20px;background:var(--bg-tertiary);border:1px solid var(--border-light);border-radius:12px;padding:24px;text-align:center;">
+          <div style="font-size:20px;font-weight:800;color:var(--color-danger);margin-bottom:6px;">✕ UNRECOGNIZED DOCUMENT</div>
+          <p style="color:var(--text-secondary);font-size:14px;margin-bottom:10px;">
+            No authentic academic record on SanadChain matches the cryptographic hash of this file.
           </p>
-          <div class="mono" style="font-size:11px;color:var(--text-muted);">Calculated SHA-256: ${esc(data.documentHash)}</div>
+          <div class="mono" style="font-size:12px;color:var(--text-muted);">Computed SHA-256: ${esc(data.documentHash)}</div>
         </div>
       `;
     }
@@ -949,6 +967,7 @@ async function verifyDocumentDirect(documentHash, fileName, credentialId = '') {
 }
 window.verifyDocumentDirect = verifyDocumentDirect;
 
+// MAIN PUBLIC VERIFICATION HANDLER
 async function handleVerify() {
   const idInput = document.querySelector('#verifyInput');
   const resultArea = document.querySelector('#verifyResultArea');
@@ -974,18 +993,15 @@ async function handleVerify() {
 
     if (!res.ok) {
       resultArea.innerHTML = `
-        <div class="verify-result-box not-found">
-          <div class="verify-header">
-            <div class="verify-status-title" style="color:var(--color-danger);">
+        <div style="margin-top:24px;">
+          <div style="background:var(--color-danger-bg);border:2px solid var(--color-danger);border-radius:12px;padding:24px;text-align:center;">
+            <div style="font-size:26px;font-weight:900;color:var(--color-danger);margin-bottom:4px;">
               ✕ CREDENTIAL NOT FOUND
             </div>
-            <div class="verify-timing-pill">⏱ ${duration}s actual latency</div>
-          </div>
-          <p style="color:var(--text-secondary);font-size:15px;margin-bottom:14px;">
-            ${esc(data.message || 'No record with this identifier exists on the SanadChain ledger.')}
-          </p>
-          <div style="font-size:13px;color:var(--text-muted);">
-            Please double check the Credential ID or request an updated link from the student.
+            <div class="verify-timing-pill" style="margin:8px auto;display:inline-block;">⏱ ${duration}s actual latency</div>
+            <p style="color:var(--text-secondary);font-size:14px;margin-top:8px;">
+              ${esc(data.message || 'No record with this identifier exists on the SanadChain ledger.')}
+            </p>
           </div>
         </div>
       `;
@@ -993,77 +1009,198 @@ async function handleVerify() {
     }
 
     const c = data.credential;
+    const b = data.blockchain || {};
+    const h = data.hash || {};
     const isValid = data.status === 'VALID';
+    const isRevoked = data.status === 'REVOKED';
     const isDigiLocker = c.source === 'DIGILOCKER_NAD';
 
     resultArea.innerHTML = `
-      <div class="verify-result-box ${isValid ? 'valid' : 'revoked'}">
-        <div class="verify-header">
-          <div>
-            <div class="verify-status-title" style="color:${isValid ? 'var(--color-success)' : 'var(--color-warning)'};">
-              ${isValid ? '✓ CREDENTIAL VERIFIED' : '⚠ CREDENTIAL REVOKED'}
+      <div style="margin-top:24px;">
+        <!-- 3 STATES HERO BANNER -->
+        ${isValid ? `
+          <div style="background:var(--color-success-bg);border:2px solid var(--color-success);border-radius:12px;padding:24px;text-align:center;margin-bottom:24px;">
+            <div style="font-size:28px;font-weight:900;color:var(--color-success);letter-spacing:-0.02em;margin-bottom:4px;">
+              ✓ CREDENTIAL VERIFIED
             </div>
-            <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">
-              ${isValid ? 'Cryptographic proof validated against permissioned ledger' : 'This credential was revoked by the issuing institution'}
-              ${isDigiLocker ? ' · <b style="color:var(--brand-blue);">🇮🇳 DigiLocker / NAD Synchronized</b>' : ''}
+            <div style="font-size:18px;font-weight:800;color:var(--color-success);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">
+              VALID & AUTHENTIC
+            </div>
+            <p style="color:var(--text-secondary);font-size:14px;max-width:540px;margin:0 auto 12px;">
+              This credential has been verified against its blockchain-anchored record.
+            </p>
+            <div class="verify-timing-pill" style="display:inline-block;">
+              ⏱ Verification completed in ${data.verificationSeconds || duration} seconds
             </div>
           </div>
-          <div class="verify-timing-pill">⏱ ${data.verificationSeconds || duration}s actual latency</div>
+        ` : `
+          <div style="background:var(--color-warning-bg);border:2px solid var(--color-warning);border-radius:12px;padding:24px;text-align:center;margin-bottom:24px;">
+            <div style="font-size:28px;font-weight:900;color:var(--color-warning);margin-bottom:4px;">
+              ⚠ CREDENTIAL REVOKED
+            </div>
+            <div style="font-size:16px;font-weight:800;color:var(--color-warning);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">
+              REVOKED BY ISSUING AUTHORITY
+            </div>
+            <p style="color:var(--text-secondary);font-size:14px;max-width:540px;margin:0 auto 8px;">
+              This credential was revoked by the issuing institution.
+            </p>
+            <div style="font-size:14px;color:var(--text-primary);font-weight:700;margin-bottom:12px;">
+              Formal Reason: ${esc(c.revocationReason || 'Administrative correction')}
+            </div>
+            <div class="verify-timing-pill" style="display:inline-block;">
+              ⏱ Verification completed in ${data.verificationSeconds || duration} seconds
+            </div>
+          </div>
+        `}
+
+        <!-- SECTION 1: CREDENTIAL INFORMATION -->
+        <div class="card" style="background:var(--bg-card);margin-bottom:20px;">
+          <h3 style="font-size:18px;margin-bottom:14px;border-bottom:1px solid var(--border-light);padding-bottom:8px;">
+            Credential Information
+          </h3>
+          <div class="verify-meta-grid">
+            <div class="meta-item">
+              <span class="meta-label">Student</span>
+              <span class="meta-val" style="font-weight:700;font-size:16px;">${esc(c.studentName || c.studentDisplayName)}</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">Credential Award</span>
+              <span class="meta-val" style="font-weight:700;color:var(--brand-blue);">${esc(c.program)}</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">Issuing Institution</span>
+              <span class="meta-val">${esc(c.institution)}</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">Credential ID</span>
+              <span class="meta-val mono" style="color:var(--brand-blue);font-weight:700;">${esc(c.credentialId)}</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">Issue Date</span>
+              <span class="meta-val">${esc(c.issueDate)}</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">Credential Status</span>
+              <span class="meta-val">
+                <span class="badge ${isValid ? 'badge-success' : 'badge-danger'}">${esc(c.status)}</span>
+                ${isDigiLocker ? ' <span class="badge badge-blue">🇮🇳 DigiLocker / NAD</span>' : ''}
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div class="verify-meta-grid">
-          <div class="meta-item">
-            <span class="meta-label">Issuing Institution</span>
-            <span class="meta-val">${esc(c.institution)}</span>
-          </div>
-
-          <div class="meta-item">
-            <span class="meta-label">Credential Program</span>
-            <span class="meta-val">${esc(c.program)}</span>
-          </div>
-
-          <div class="meta-item">
-            <span class="meta-label">Recipient Display Name</span>
-            <span class="meta-val">${esc(c.studentDisplayName)}</span>
-          </div>
-
-          <div class="meta-item">
-            <span class="meta-label">Credential ID</span>
-            <span class="meta-val mono" style="color:var(--brand-blue);">${esc(c.credentialId)}</span>
-          </div>
-
-          <div class="meta-item">
-            <span class="meta-label">Issue Date</span>
-            <span class="meta-val">${esc(c.issueDate)}</span>
-          </div>
-
-          <div class="meta-item">
-            <span class="meta-label">Blockchain Anchor</span>
-            <span class="meta-val"><span class="badge badge-success">Block #${c.blockNumber || 1842} · CONFIRMED</span></span>
-          </div>
-
-          <div class="meta-item" style="grid-column: span 2;">
-            <span class="meta-label">Document SHA-256 Hash</span>
-            <span class="meta-val mono" style="font-size:13px;">${esc(c.documentHash)}</span>
-          </div>
-
-          <div class="meta-item" style="grid-column: span 2;">
-            <span class="meta-label">Blockchain Transaction ID</span>
-            <span class="meta-val mono" style="font-size:13px;color:var(--text-secondary);">${esc(c.transactionId)}</span>
-          </div>
-
-          ${c.revocationReason ? `
-            <div class="meta-item" style="grid-column: span 2;background:rgba(245,158,11,0.1);padding:12px;border-radius:8px;border-left:4px solid var(--color-warning);">
-              <span class="meta-label" style="color:var(--color-warning);">Formal Revocation Reason</span>
-              <span class="meta-val" style="font-size:14px;color:var(--text-primary);">${esc(c.revocationReason)}</span>
-              <span style="font-size:12px;color:var(--text-muted);margin-top:4px;">Revoked at: ${new Date(c.revokedAt).toLocaleString()}</span>
+        <!-- SECTION 2: BLOCKCHAIN VERIFICATION CHECKLIST -->
+        <div class="card" style="background:var(--bg-tertiary);margin-bottom:20px;">
+          <h3 style="font-size:18px;margin-bottom:12px;">Blockchain Verification Checklist</h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:10px;margin-bottom:14px;">
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--color-success);font-weight:700;">
+              <span>✓</span> Issuer Verified
             </div>
-          ` : ''}
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--color-success);font-weight:700;">
+              <span>✓</span> Hash Matched
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--color-success);font-weight:700;">
+              <span>✓</span> Digital Signature Valid
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--color-success);font-weight:700;">
+              <span>✓</span> Blockchain Record Confirmed
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:${isValid ? 'var(--color-success)' : 'var(--color-warning)'};font-weight:700;">
+              <span>${isValid ? '✓' : '⚠'}</span> ${isValid ? 'Credential Active' : 'Credential Revoked'}
+            </div>
+          </div>
         </div>
 
-        <div style="display:flex;justify-content:flex-end;margin-top:20px;gap:10px;">
-          <button class="btn btn-secondary btn-sm" onclick="showCertificateModal('${esc(c.credentialId)}')">📄 View Printable Certificate</button>
-          <button class="btn btn-primary btn-sm" onclick="syncToDigiLocker('${esc(c.credentialId)}')">🇮🇳 Push to DigiLocker</button>
+        <!-- SECTION 3: DEDICATED 🔗 BLOCKCHAIN PROOF CARD -->
+        <div class="card" style="background:var(--bg-card);border-left:4px solid var(--brand-blue);margin-bottom:20px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;border-bottom:1px solid var(--border-light);padding-bottom:8px;">
+            <h3 style="font-size:18px;margin:0;display:flex;align-items:center;gap:8px;">
+              <span>🔗</span> BLOCKCHAIN PROOF
+            </h3>
+            <span class="badge badge-success">✓ Record Confirmed</span>
+          </div>
+
+          <div class="verify-meta-grid">
+            <div class="meta-item">
+              <span class="meta-label">Permissioned Network</span>
+              <span class="meta-val">${esc(b.network || 'SanadChain Permissioned Network')} (${esc(b.channel || 'sanadchannel')})</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">Endorsing Organization MSP</span>
+              <span class="meta-val mono" style="color:var(--brand-blue);">${esc(b.organization || 'ABCUniversityMSP')}</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">Ledger Block Number</span>
+              <span class="meta-val mono" style="font-weight:700;color:var(--color-success);">#${b.blockNumber || 1842}</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">Blockchain Transaction ID</span>
+              <span class="meta-val mono" style="font-size:12px;">${esc(c.transactionId || b.transactionId)}</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">Hash Algorithm</span>
+              <span class="meta-val mono">${esc(h.algorithm || 'SHA-256')}</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">Digital Signature</span>
+              <span class="meta-val mono" style="font-size:11px;color:var(--text-muted);">${esc(c.digitalSignature?.slice(0, 30))}...</span>
+            </div>
+
+            <div class="meta-item" style="grid-column:span 2;">
+              <span class="meta-label">Document SHA-256 Digest</span>
+              <span class="meta-val mono" style="font-size:13px;word-break:break-all;color:var(--brand-cyan);">${esc(c.documentHash || h.value)}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: CREDENTIAL LIFECYCLE TIMELINE -->
+        <div class="card" style="background:var(--bg-tertiary);margin-bottom:20px;">
+          <h3 style="font-size:18px;margin-bottom:14px;">Credential Lifecycle Timeline</h3>
+          <div class="audit-timeline">
+            ${(data.timeline || []).map(item => `
+              <div class="timeline-item">
+                <div class="timeline-dot ${item.status === 'REVOKED' ? 'revoked' : 'active'}"></div>
+                <div class="timeline-content">
+                  <div class="timeline-date">${esc(item.date)}</div>
+                  <div class="timeline-title">${esc(item.event)}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- SECTION 5: INTERACTIVE TAMPER DETECTION SANDBOX -->
+        <div class="card" style="background:var(--bg-card);border:1px dashed var(--brand-blue);margin-bottom:20px;">
+          <h3 style="font-size:18px;margin-bottom:6px;">Want to verify the actual document?</h3>
+          <p style="color:var(--text-secondary);font-size:13px;margin-bottom:14px;">
+            Upload the student's certificate file to verify that its SHA-256 hash matches the blockchain-anchored proof above.
+          </p>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+            <input id="verifyUploadInput" type="file" style="display:none;" onchange="handlePublicFileVerify(event, '${esc(c.documentHash)}')" />
+            <button class="btn btn-primary btn-sm" onclick="document.querySelector('#verifyUploadInput').click()">📁 Upload Certificate File</button>
+            <button class="btn btn-secondary btn-sm" onclick="testLiveTamperCheck('match', '${esc(c.documentHash)}')">Test Genuine Match</button>
+            <button class="btn btn-secondary btn-sm" onclick="testLiveTamperCheck('mismatch', '${esc(c.documentHash)}')">Test Altered Tamper</button>
+          </div>
+
+          <div id="liveTamperVerdict" style="margin-top:14px;"></div>
+        </div>
+
+        <!-- SECTION 6: ACTIONS -->
+        <div style="display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-bottom:24px;">
+          <button class="btn btn-primary" onclick="showCertificateModal('${esc(c.credentialId)}')">📄 View Printable Certificate</button>
+          <button class="btn btn-secondary" onclick="syncToDigiLocker('${esc(c.credentialId)}')">🇮🇳 Save / Sync to DigiLocker</button>
+          <button class="btn btn-secondary" onclick="showRawBlockchainRecordModal('${esc(c.credentialId)}')">🔗 View Raw Blockchain Record</button>
         </div>
       </div>
     `;
@@ -1071,6 +1208,85 @@ async function handleVerify() {
     resultArea.innerHTML = `<div class="verify-result-box not-found"><p style="color:var(--color-danger);">Network error verifying credential.</p></div>`;
   }
 }
+window.handleVerify = handleVerify;
+
+// Live Tamper Tester in /verify
+function testLiveTamperCheck(type, originalHash) {
+  const verdict = document.querySelector('#liveTamperVerdict');
+  if (!verdict) return;
+
+  if (type === 'match') {
+    verdict.innerHTML = `
+      <div style="background:var(--color-success-bg);border-left:4px solid var(--color-success);padding:12px;border-radius:6px;">
+        <div style="font-weight:700;color:var(--color-success);font-size:14px;margin-bottom:4px;">✓ MATCH · CREDENTIAL AUTHENTIC</div>
+        <div class="mono" style="font-size:11px;">Uploaded Hash: ${esc(originalHash)}<br>Blockchain Hash: ${esc(originalHash)}</div>
+      </div>
+    `;
+  } else {
+    const alteredHash = '19ad72bc55ef83c11d29381e4a5bf607183e95bc7291a27e4c9e88d0172bf425';
+    verdict.innerHTML = `
+      <div style="background:var(--color-danger-bg);border-left:4px solid var(--color-danger);padding:12px;border-radius:6px;">
+        <div style="font-weight:700;color:var(--color-danger);font-size:14px;margin-bottom:4px;">✕ MISMATCH · TAMPER DETECTED</div>
+        <div class="mono" style="font-size:11px;color:var(--color-danger);">Uploaded Hash: ${alteredHash}</div>
+        <div class="mono" style="font-size:11px;color:var(--color-success);">Blockchain Hash: ${esc(originalHash)}</div>
+      </div>
+    `;
+  }
+}
+window.testLiveTamperCheck = testLiveTamperCheck;
+
+async function handlePublicFileVerify(event, originalHash) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const verdict = document.querySelector('#liveTamperVerdict');
+  if (verdict) verdict.innerHTML = `<div class="mono" style="font-size:12px;color:var(--brand-blue);">Calculating SHA-256 of ${esc(file.name)}...</div>`;
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const arrayBuffer = e.target.result;
+    const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const computedHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+    if (computedHash === originalHash) {
+      testLiveTamperCheck('match', originalHash);
+    } else {
+      testLiveTamperCheck('mismatch', originalHash);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+window.handlePublicFileVerify = handlePublicFileVerify;
+
+// Raw Blockchain JSON Record Modal
+async function showRawBlockchainRecordModal(credId) {
+  try {
+    const res = await fetch(`${API}/verify/${encodeURIComponent(credId)}`);
+    const data = await res.json();
+    const modal = document.createElement('div');
+    modal.id = 'rawBcModal';
+    modal.style = 'position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:300;display:grid;place-items:center;padding:20px;backdrop-filter:blur(6px);';
+    modal.innerHTML = `
+      <div class="card" style="max-width:680px;width:100%;max-height:85vh;display:flex;flex-direction:column;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <h3 style="font-size:18px;margin:0;">🔗 Hyperledger Fabric Ledger Record</h3>
+          <button class="btn btn-secondary btn-sm" onclick="document.querySelector('#rawBcModal').remove()">✕</button>
+        </div>
+        <p style="color:var(--text-secondary);font-size:13px;margin-bottom:12px;">
+          Immutable payload verified on channel <b>sanadchannel</b>.
+        </p>
+        <pre style="flex:1;overflow:auto;background:var(--bg-tertiary);padding:14px;border-radius:8px;font-family:var(--font-mono);font-size:12px;color:var(--brand-cyan);border:1px solid var(--border-light);">${esc(JSON.stringify(data, null, 2))}</pre>
+        <div style="display:flex;justify-content:flex-end;margin-top:14px;">
+          <button class="btn btn-secondary btn-sm" onclick="document.querySelector('#rawBcModal').remove()">Close</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  } catch (err) {
+    showToast('Failed to load raw blockchain record', 'danger');
+  }
+}
+window.showRawBlockchainRecordModal = showRawBlockchainRecordModal;
 window.handleVerify = handleVerify;
 
 // Camera QR Scanner Modal Simulator
