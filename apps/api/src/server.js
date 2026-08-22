@@ -10,6 +10,7 @@ import { dirname, join } from 'node:path';
 import { db } from './db/index.js';
 import { MockBlockchainService, FabricBlockchainService } from './services/blockchain.js';
 import { NADIntegrationService } from './services/nad.js';
+import { aiFraudService, REAL_WORLD_ACCREDITATION_DB } from './services/ai_fraud_detector.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -397,11 +398,23 @@ app.get('/api/verify/:credentialId', async (req, res) => {
     });
   }
 
+  const aiReport = aiFraudService.analyzeCredential({
+    studentName: cred.studentDisplayName,
+    program: cred.program,
+    institution: cred.institution,
+    academicResult: cred.academicResult,
+    studentReference: cred.studentReference,
+    graduationYear: cred.graduationYear,
+    documentHash: cred.documentHash,
+    isLedgerMatched: !isRevoked
+  });
+
   res.json({
     status: resultStatus,
     credentialId: cred.credentialId,
     verificationSeconds,
     latencyMs,
+    aiReport,
     verification: {
       verified: !isRevoked,
       issuerVerified: true,
@@ -916,6 +929,29 @@ app.get('/api/audit', authenticate, async (req, res) => {
 app.get('/api/analytics', async (req, res) => {
   const analytics = await db.getAnalytics();
   res.json(analytics);
+});
+
+// ==========================================================
+// 8. AI FRAUD INTELLIGENCE & REAL-TIME ACCREDITATION
+// ==========================================================
+
+app.post('/api/ai/analyze', async (req, res) => {
+  const analysis = aiFraudService.analyzeCredential(req.body || {});
+  res.json(analysis);
+});
+
+app.get('/api/ai/metrics', (req, res) => {
+  res.json(aiFraudService.getMetrics());
+});
+
+app.get('/api/ai/watchlist', (req, res) => {
+  res.json(REAL_WORLD_ACCREDITATION_DB);
+});
+
+app.post('/api/ai/train', (req, res) => {
+  const { samples } = req.body || {};
+  const result = aiFraudService.trainModel(Array.isArray(samples) ? samples : []);
+  res.json(result);
 });
 
 // Health check endpoint

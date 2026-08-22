@@ -182,3 +182,50 @@ test('TEST 10: 2FA OTP generation and verification', async () => {
   // Fallback demo code check
   assert.equal(db.verifyOtp('random@abc.edu', '123456'), true);
 });
+
+test('TEST 11: AI Credential Detector identifies authentic vs anomalous/fraudulent credentials', async () => {
+  const { aiFraudService } = await import('../src/services/ai_fraud_detector.js');
+
+  // Genuine sample
+  const genuineAnalysis = aiFraudService.analyzeCredential({
+    studentName: 'Rahul Sharma',
+    studentReference: 'STU-2026-00123',
+    institution: 'ABC University of Technology',
+    program: 'Bachelor of Technology in Computer Science',
+    graduationYear: 2026,
+    academicResult: 'CGPA 9.24 / 10.0',
+    isLedgerMatched: true
+  });
+  assert.equal(genuineAnalysis.riskLevel, 'LOW');
+  assert.equal(genuineAnalysis.institutionAccreditation.recognized, true);
+  assert.equal(genuineAnalysis.anomalies.length, 0);
+
+  // Blacklisted Fake University Sample
+  const fakeUnivAnalysis = aiFraudService.analyzeCredential({
+    studentName: 'Vikram Singh',
+    studentReference: 'FAKE-2026-999',
+    institution: 'Commercial University Ltd., Daryaganj, Delhi',
+    program: 'Doctorate in Management',
+    graduationYear: 2026,
+    academicResult: 'CGPA 10.0 / 10.0',
+    isLedgerMatched: false
+  });
+  assert.equal(fakeUnivAnalysis.riskLevel, 'HIGH');
+  assert.ok(fakeUnivAnalysis.riskScore >= 75);
+  assert.ok(fakeUnivAnalysis.anomalies.some(a => a.code === 'BLACKLISTED_INSTITUTION'));
+});
+
+test('TEST 12: AI Model retraining and real-time metric calculation', async () => {
+  const { aiFraudService } = await import('../src/services/ai_fraud_detector.js');
+
+  const initialMetrics = aiFraudService.getMetrics();
+  assert.ok(initialMetrics.totalAnalyzed >= 1000);
+  assert.equal(initialMetrics.engineState, 'ACTIVE_REAL_TIME');
+
+  // Retrain model
+  const trainResult = aiFraudService.trainModel([
+    { features: [130, 8.8, 1, 1, 1], label: 0, desc: 'Verified Degree' }
+  ]);
+  assert.equal(trainResult.status, 'TRAINED');
+  assert.ok(parseFloat(trainResult.accuracy) > 90);
+});
