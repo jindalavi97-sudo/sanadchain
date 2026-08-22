@@ -1,0 +1,6 @@
+{
+  "name": "@sanadchain/api",
+  "type": "module",
+  "scripts": { "dev": "node --watch src/server.js", "start": "node src/server.js", "test": "node --test" },
+  "dependencies": { "express": "^5.1.0", "cors": "^2.8.5", "helmet": "^8.1.0", "jsonwebtoken": "^9.0.2", "bcryptjs": "^3.0.2", "qrcode": "^1.5.4" }
+}

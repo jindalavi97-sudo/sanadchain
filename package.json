@@ -1,0 +1,7 @@
+{
+  "name": "sanadchain",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": { "dev": "npm run dev -w @sanadchain/api", "start": "npm run start -w @sanadchain/api", "test": "npm run test -w @sanadchain/api" }
+}
