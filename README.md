@@ -133,15 +133,25 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | **Student** | `rahul@student.abc.edu` | `Student@123` | View digital certificates, print/save PDF, copy verification link, save to DigiLocker |
 
 ### Benchmark Verification Test IDs:
+- **`SANAD-NAD-20269901`** ➔ **✓ VALID** (B.Tech Computer Science, Rahul Sharma — National Academic Depository Benchmark)
 - **`SANAD-2026-000123`** ➔ **✓ VALID** (B.Tech Computer Science, Rahul Sharma)
 - **`SANAD-2026-000124`** ➔ **⚠ REVOKED** (B.Tech Electronics, Ananya Patel — Reason: Credit correction)
 - **`SANAD-2026-000125`** ➔ **✓ VALID (DigiLocker Imported)** (PG Diploma, Arjun Kumar)
 
 ---
 
-## 🏆 9. Hackathon / Judge Presentation Pitch
+## 🤖 9. AI Credential Intelligence & Real-Time Fraud Engine
 
-> *"SanadChain is a permissioned blockchain academic credential trust layer that enables verified institutions to issue digitally signed, tamper-evident credentials and allows employers and universities to verify them instantly through QR codes—without requiring direct communication with the issuing institution. The platform supports credential revocation, audit trails, role-based access control and bidirectional integration with India's DigiLocker/NAD ecosystem."*
+SanadChain incorporates an AI-powered credential anomaly detection classifier trained on real-world Indian university data:
+- **Statistical Anomaly Scanners**: Analyzes CGPA distributions, roll number syntax formats, and graduation conferment chronology.
+- **Accreditation Registry**: Live cross-checks with UGC/AICTE recognized institutions (IIT Delhi, BITS Pilani, ABC Univ) and flags known diploma mills from the official UGC Fake University Watchlist.
+- **Live Model Retraining**: Allows verifiers to fine-tune neural weights on-the-fly via gradient descent.
+
+---
+
+## 🏆 10. Summary Pitch
+
+> *"SanadChain is a permissioned blockchain academic credential trust platform that enables verified institutions to issue digitally signed, tamper-evident credentials and allows employers and universities to verify them instantly through QR codes—without requiring direct communication with the issuing institution. The platform supports credential revocation, AI anomaly scoring, audit trails, role-based access control, Google SSO, and bidirectional integration with India's DigiLocker/NAD ecosystem."*
 
 ---
 

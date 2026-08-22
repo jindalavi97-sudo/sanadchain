@@ -9,7 +9,7 @@ const API = '/api';
 // State Management
 let currentUser = JSON.parse(localStorage.getItem('sanad_user') || 'null');
 let authToken = localStorage.getItem('sanad_token') || '';
-let theme = localStorage.getItem('sanad_theme') || 'system';
+let theme = localStorage.getItem('sanad_theme') || 'dark';
 let digiLockerLinked = localStorage.getItem('sanad_dl_linked') === 'true';
 
 // Apply Theme
@@ -747,90 +747,254 @@ window.setVerifyMode = setVerifyMode;
 function renderVerify(prefillId = '') {
   return `
     ${renderNav()}
-    <main class="wrap verify-container" style="max-width:880px;margin:30px auto 60px;">
-      <!-- Header Banner -->
-      <div style="text-align:center;margin-bottom:28px;">
+    <main class="wrap verify-container" style="max-width:980px;margin:30px auto 60px;">
+      <!-- HERO SECTION -->
+      <div style="text-align:center;margin-bottom:32px;">
         <div class="eyebrow" style="display:inline-flex;align-items:center;gap:6px;margin-bottom:10px;">
           <span>🔓</span> PUBLIC VERIFICATION · No Login Required
         </div>
-        <h1 style="font-size:36px;letter-spacing:-0.03em;margin-bottom:6px;">
-          SANADCHAIN
+        <h1 style="font-size:38px;letter-spacing:-0.03em;margin-bottom:10px;line-height:1.2;">
+          Verify Academic Credentials in Seconds
         </h1>
-        <p style="color:var(--text-secondary);font-size:16px;max-width:620px;margin:0 auto;">
-          Blockchain Academic Credential Verification Platform
+        <p style="color:var(--text-secondary);font-size:16px;max-width:680px;margin:0 auto 16px;">
+          Instantly verify the authenticity and status of academic credentials using cryptographic verification and blockchain-anchored records.
         </p>
+
+        <!-- Hero Badges -->
+        <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+          <span class="badge badge-success">✓ No Login Required</span>
+          <span class="badge badge-blue">✓ QR Verification</span>
+          <span class="badge badge-cyan">✓ Blockchain Anchored</span>
+          <span class="badge badge-purple">✓ Tamper Detection</span>
+        </div>
       </div>
 
-      <div class="card" style="margin-bottom:24px;">
-        <!-- Verification Mode Tabs -->
-        <div style="display:flex;gap:8px;border-bottom:1px solid var(--border-light);padding-bottom:14px;margin-bottom:20px;">
-          <button id="btnTabId" class="btn ${verifyMode === 'id' ? 'btn-primary' : 'btn-secondary'} btn-sm" onclick="setVerifyMode('id')">
-            🔍 Verify by Credential ID / QR
-          </button>
-          <button id="btnTabFile" class="btn ${verifyMode === 'file' ? 'btn-primary' : 'btn-secondary'} btn-sm" onclick="setVerifyMode('file')">
-            📁 Verify by Uploading Document File (PDF / Marksheet)
-          </button>
-        </div>
+      <!-- MAIN VERIFICATION SECTION (ID INPUT + QR SCANNER) -->
+      <div style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:20px;margin-bottom:24px;">
+        <!-- CARD 1: CREDENTIAL ID VERIFICATION -->
+        <div class="card" style="border:1px solid var(--border-light);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <h3 style="font-size:18px;margin:0;">Verify a Credential</h3>
+            <span class="badge badge-blue">Direct Lookup</span>
+          </div>
+          <p style="color:var(--text-secondary);font-size:13px;margin-bottom:14px;">
+            Enter the Credential ID printed on the academic certificate.
+          </p>
 
-        <!-- MODE A: ID / QR SEARCH -->
-        <div id="verifyIdSection" style="${verifyMode === 'id' ? 'display:block;' : 'display:none;'}">
-          <label style="font-size:13px;font-weight:700;color:var(--text-secondary);">Credential ID / Reference</label>
-          <div class="verify-input-group">
-            <input id="verifyInput" class="input-text" type="text" value="${esc(prefillId || 'SANAD-NAD-20269901')}" placeholder="e.g. SANAD-NAD-20269901 or SANAD-2026-000123" />
-            <button class="btn btn-primary" onclick="handleVerify()">Verify Credential</button>
+          <label style="font-size:12px;font-weight:700;color:var(--text-secondary);">Credential ID</label>
+          <div class="verify-input-group" style="margin-top:4px;">
+            <input id="verifyInput" class="input-text" type="text" value="${esc(prefillId || 'SANAD-NAD-20269901')}" placeholder="SANAD-NAD-20269901" />
+            <button class="btn btn-primary" onclick="submitVerifyForm()">VERIFY CREDENTIAL</button>
           </div>
 
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:10px;">
-            <div style="font-size:13px;color:var(--text-muted);">
-              Quick Demo IDs: 
-              <a href="#" onclick="document.querySelector('#verifyInput').value='SANAD-NAD-20269901';handleVerify();return false;">Valid B.Tech (SANAD-NAD-20269901)</a> · 
-              <a href="#" onclick="document.querySelector('#verifyInput').value='SANAD-2026-000123';handleVerify();return false;">Rahul Sharma Degree</a> · 
-              <a href="#" onclick="document.querySelector('#verifyInput').value='SANAD-2026-000124';handleVerify();return false;">Revoked Degree</a> · 
-              <a href="#" onclick="document.querySelector('#verifyInput').value='SANAD-2026-000125';handleVerify();return false;">DigiLocker Diploma</a>
+          <!-- Quick Demo Chips -->
+          <div style="margin-top:12px;font-size:12px;color:var(--text-muted);">
+            Quick Demo IDs: 
+            <a href="#" onclick="document.querySelector('#verifyInput').value='SANAD-NAD-20269901';submitVerifyForm();return false;">SANAD-NAD-20269901</a> · 
+            <a href="#" onclick="document.querySelector('#verifyInput').value='SANAD-2026-000123';submitVerifyForm();return false;">SANAD-2026-000123</a> · 
+            <a href="#" onclick="document.querySelector('#verifyInput').value='SANAD-2026-000124';submitVerifyForm();return false;">SANAD-2026-000124 (Revoked)</a>
+          </div>
+        </div>
+
+        <!-- CARD 2: QR CODE VERIFICATION -->
+        <div class="card" style="border:1px solid var(--border-light);display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+              <h3 style="font-size:18px;margin:0;">Scan QR Code</h3>
+              <span class="badge badge-cyan">Camera Scanner</span>
             </div>
-            <button class="btn btn-secondary btn-sm" onclick="showScanModal()">📷 Scan QR Code</button>
-          </div>
-        </div>
-
-        <!-- MODE B: FILE UPLOAD VERIFICATION -->
-        <div id="verifyFileSection" style="${verifyMode === 'file' ? 'display:block;' : 'display:none;'}">
-          <div style="border:2px dashed var(--brand-blue);border-radius:12px;padding:30px;text-align:center;background:var(--bg-tertiary);margin-bottom:16px;cursor:pointer;" onclick="document.querySelector('#certFileInput').click()">
-            <div style="font-size:36px;margin-bottom:8px;">📄</div>
-            <h4 style="font-size:16px;margin-bottom:4px;">Drag & Drop Certificate or Click to Upload</h4>
-            <p style="color:var(--text-secondary);font-size:13px;margin-bottom:12px;">Supports PDF degrees, Marksheets (PNG/JPG), and Digital Smart Credentials</p>
-            <input id="certFileInput" type="file" style="display:none;" onchange="handleFileChosen(event)" />
-            <button type="button" class="btn btn-secondary btn-sm">Select Document File</button>
+            <p style="color:var(--text-secondary);font-size:13px;margin-bottom:16px;">
+              Use your device camera to scan the QR code printed on the credential.
+            </p>
           </div>
 
-          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
-            <span style="font-size:12px;font-weight:700;color:var(--text-muted);">OR TEST PRELOADED DEMO FILES:</span>
-            <div style="display:flex;gap:6px;">
-              <button class="btn btn-secondary btn-sm" onclick="testUploadPreset('genuine')">Genuine B.Tech PDF</button>
-              <button class="btn btn-secondary btn-sm" onclick="testUploadPreset('tampered')">Forged/Altered PDF</button>
-              <button class="btn btn-secondary btn-sm" onclick="testUploadPreset('digilocker')">DigiLocker Marksheet</button>
+          <div>
+            <button class="btn btn-secondary btn-block" style="width:100%;margin-bottom:8px;" onclick="showScanModal()">
+              📷 SCAN QR CODE
+            </button>
+            <div style="font-size:11px;color:var(--text-muted);text-align:center;">
+              Fallback: <a href="#" onclick="document.querySelector('#verifyInput').focus();return false;">Enter Credential ID manually</a>
             </div>
           </div>
         </div>
-
-        <div id="verifyResultArea"></div>
       </div>
 
-      <!-- BOTTOM "VERIFY ANOTHER CREDENTIAL" BOX -->
-      <div class="card" style="background:var(--bg-tertiary);border:1px solid var(--border-light);text-align:center;padding:24px;">
-        <h4 style="font-size:16px;margin-bottom:6px;">Verify Another Academic Credential</h4>
-        <p style="color:var(--text-secondary);font-size:13px;margin-bottom:16px;">
-          Instant, trustless verification on the permissioned blockchain trust network.
+      <!-- CARD 3: 1-CLICK DEMO CREDENTIAL CARD -->
+      <div class="card" style="background:var(--bg-tertiary);border:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:28px;padding:18px 24px;">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <h4 style="margin:0;font-size:16px;">Try a Demo Credential</h4>
+            <span class="badge badge-blue">Demo credential</span>
+          </div>
+          <p style="color:var(--text-secondary);font-size:13px;margin:0;">
+            Benchmark ID: <b class="mono" style="color:var(--brand-blue);">SANAD-NAD-20269901</b> (Rahul Sharma · B.Tech Computer Science)
+          </p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="navigate('/verify/SANAD-NAD-20269901')">
+          VERIFY DEMO CREDENTIAL →
+        </button>
+      </div>
+
+      <!-- LIVE VERIFICATION RESULT CONTAINER -->
+      <div id="verifyResultArea"></div>
+
+      <!-- HOW IT WORKS: 3-STEP VISUAL PROCESS -->
+      <div class="card" style="margin-bottom:28px;">
+        <h3 style="font-size:20px;text-align:center;margin-bottom:20px;">How It Works</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:18px;">
+          <div style="background:var(--bg-tertiary);padding:18px;border-radius:10px;border:1px solid var(--border-light);text-align:center;">
+            <div style="font-size:24px;margin-bottom:6px;">1️⃣</div>
+            <div style="font-weight:800;font-size:15px;margin-bottom:4px;">STEP 1: Enter ID or Scan QR</div>
+            <div style="font-size:13px;color:var(--text-secondary);">Input the certificate reference or point your camera at the printed QR proof.</div>
+          </div>
+
+          <div style="background:var(--bg-tertiary);padding:18px;border-radius:10px;border:1px solid var(--border-light);text-align:center;">
+            <div style="font-size:24px;margin-bottom:6px;">2️⃣</div>
+            <div style="font-weight:800;font-size:15px;margin-bottom:4px;">STEP 2: SanadChain Cryptographic Checks</div>
+            <div style="font-size:13px;color:var(--text-secondary);">Verifies Issuer identity, SHA-256 hash, ECDSA digital signature & ledger state.</div>
+          </div>
+
+          <div style="background:var(--bg-tertiary);padding:18px;border-radius:10px;border:1px solid var(--border-light);text-align:center;">
+            <div style="font-size:24px;margin-bottom:6px;">3️⃣</div>
+            <div style="font-weight:800;font-size:15px;margin-bottom:4px;">STEP 3: Instant Verdict</div>
+            <div style="font-size:13px;color:var(--text-secondary);">
+              Returns <span style="color:var(--color-success);font-weight:700;">VALID</span>, 
+              <span style="color:var(--color-danger);font-weight:700;">TAMPERED</span>, or 
+              <span style="color:var(--color-warning);font-weight:700;">REVOKED</span> in sub-second time.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECURITY SECTION: WHY SANADCHAIN? -->
+      <div class="card" style="margin-bottom:28px;">
+        <h3 style="font-size:20px;text-align:center;margin-bottom:20px;">Why SanadChain?</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px;">
+          <div style="border:1px solid var(--border-light);padding:16px;border-radius:10px;">
+            <div style="font-weight:800;color:var(--brand-blue);margin-bottom:4px;">🛡️ Tamper Detection</div>
+            <div style="font-size:13px;color:var(--text-secondary);">Cryptographic hashing helps detect unauthorized changes to credential documents.</div>
+          </div>
+          <div style="border:1px solid var(--border-light);padding:16px;border-radius:10px;">
+            <div style="font-weight:800;color:var(--brand-cyan);margin-bottom:4px;">🏛️ Issuer Verification</div>
+            <div style="font-size:13px;color:var(--text-secondary);">Verify that the credential originates from a recognized issuing institution.</div>
+          </div>
+          <div style="border:1px solid var(--border-light);padding:16px;border-radius:10px;">
+            <div style="font-weight:800;color:var(--brand-purple);margin-bottom:4px;">⛓️ Blockchain Proof</div>
+            <div style="font-size:13px;color:var(--text-secondary);">Credential integrity is anchored to a permissioned blockchain network.</div>
+          </div>
+          <div style="border:1px solid var(--border-light);padding:16px;border-radius:10px;">
+            <div style="font-weight:800;color:var(--color-warning);margin-bottom:4px;">⚠ Revocation Detection</div>
+            <div style="font-size:13px;color:var(--text-secondary);">Verify whether an institution has revoked a previously issued credential.</div>
+          </div>
+          <div style="border:1px solid var(--border-light);padding:16px;border-radius:10px;">
+            <div style="font-weight:800;color:var(--color-success);margin-bottom:4px;">🔓 No Login Required</div>
+            <div style="font-size:13px;color:var(--text-secondary);">Public credential verification is available without creating an account.</div>
+          </div>
+          <div style="border:1px solid var(--border-light);padding:16px;border-radius:10px;">
+            <div style="font-weight:800;color:var(--brand-blue);margin-bottom:4px;">⚡ Fast Verification</div>
+            <div style="font-size:13px;color:var(--text-secondary);">Designed for rapid verification with a lightweight public verification workflow.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VERIFICATION FLOW VISUALIZATION -->
+      <div class="card" style="margin-bottom:28px;background:var(--bg-card);border:1px solid var(--border-light);">
+        <h3 style="font-size:18px;margin-bottom:14px;text-align:center;">Verification Pipeline Architecture</h3>
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;font-size:12px;font-weight:700;">
+          <span class="badge badge-blue">Credential</span>
+          <span style="color:var(--text-muted);">→</span>
+          <span class="badge badge-blue">ID / QR Scan</span>
+          <span style="color:var(--text-muted);">→</span>
+          <span class="badge badge-purple">Verification API</span>
+          <span style="color:var(--text-muted);">→</span>
+          <span class="badge badge-cyan">SHA-256 Hash</span>
+          <span style="color:var(--text-muted);">→</span>
+          <span class="badge badge-cyan">ECDSA Signature</span>
+          <span style="color:var(--text-muted);">→</span>
+          <span class="badge badge-success">Blockchain Record</span>
+          <span style="color:var(--text-muted);">→</span>
+          <span class="badge badge-success">Verified Verdict</span>
+        </div>
+      </div>
+
+      <!-- TRUST INDICATORS WITH INTERACTIVE TOOLTIPS -->
+      <div class="card" style="margin-bottom:28px;background:var(--bg-tertiary);border:1px solid var(--border-light);">
+        <h3 style="font-size:18px;margin-bottom:12px;">Verification Trust Checks</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:12px;">
+          <div class="meta-item" title="Verifies registrar MSP digital signature against accredited university public key">
+            <span class="meta-label">Issuer Identity</span>
+            <span class="meta-val" style="color:var(--color-success);font-weight:700;">✓ Verified MSP</span>
+          </div>
+          <div class="meta-item" title="Computes canonical SHA-256 digest to prove zero alteration">
+            <span class="meta-label">Credential Hash</span>
+            <span class="meta-val" style="color:var(--color-success);font-weight:700;">✓ SHA-256 Matched</span>
+          </div>
+          <div class="meta-item" title="Validates elliptic curve cryptographic digital signature">
+            <span class="meta-label">Digital Signature</span>
+            <span class="meta-val" style="color:var(--color-success);font-weight:700;">✓ ECDSA Valid</span>
+          </div>
+          <div class="meta-item" title="Queries immutable Hyperledger Fabric block committed with Raft consensus">
+            <span class="meta-label">Blockchain Record</span>
+            <span class="meta-val" style="color:var(--color-success);font-weight:700;">✓ Block Confirmed</span>
+          </div>
+          <div class="meta-item" title="Checks real-time revocation registry for administrative or disciplinary cancellations">
+            <span class="meta-label">Revocation Status</span>
+            <span class="meta-val" style="color:var(--color-success);font-weight:700;">✓ Active / Checked</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCKCHAIN OFF-CHAIN & PRIVACY BY DESIGN EXPLANATION -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;">
+        <!-- Blockchain Explanation -->
+        <div class="card">
+          <h3 style="font-size:17px;margin-bottom:8px;">🔒 Off-Chain Privacy Storage</h3>
+          <p style="color:var(--text-secondary);font-size:13px;margin-bottom:8px;line-height:1.5;">
+            <b>Your certificate is not stored directly on the blockchain.</b>
+          </p>
+          <p style="color:var(--text-secondary);font-size:13px;line-height:1.5;margin:0;">
+            SanadChain stores cryptographic proofs, hashes, and credential metadata on a permissioned blockchain while sensitive academic documents remain securely off-chain.
+          </p>
+        </div>
+
+        <!-- Privacy by Design -->
+        <div class="card">
+          <h3 style="font-size:17px;margin-bottom:8px;">🛡️ Privacy by Design</h3>
+          <p style="color:var(--text-secondary);font-size:13px;line-height:1.5;margin:0;">
+            Sensitive personal data (such as Aadhaar, private keys, and internal student records) is minimized. Public verification exposes only necessary credential proofs, preventing unauthorized data harvesting.
+          </p>
+        </div>
+      </div>
+
+      <!-- DIGILOCKER / NAD INTEROPERABILITY -->
+      <div class="card" style="background:var(--bg-tertiary);border:1px solid var(--border-light);text-align:center;padding:20px;">
+        <div style="display:inline-flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <h4 style="margin:0;font-size:16px;">Built for National Interoperability</h4>
+          <span class="badge badge-blue">Demo Integration</span>
+        </div>
+        <p style="color:var(--text-secondary);font-size:13px;max-width:600px;margin:0 auto 12px;">
+          SanadChain is designed with an integration path for India's DigiLocker / National Academic Depository (NAD) credential ecosystem.
         </p>
-        <div style="max-width:480px;margin:0 auto;display:flex;gap:8px;">
-          <input id="bottomVerifyInput" class="input-text" placeholder="SANAD-2026-________" />
-          <button class="btn btn-primary btn-sm" onclick="handleBottomVerify()">Verify</button>
-          <button class="btn btn-secondary btn-sm" onclick="showScanModal()">📷 Scan QR</button>
+        <div style="font-family:var(--font-mono);font-size:12px;color:var(--brand-blue);font-weight:700;">
+          DigiLocker / NAD &nbsp; ⟷ &nbsp; Credential Adapter &nbsp; ⟷ &nbsp; SanadChain
         </div>
       </div>
     </main>
     ${renderFooter()}
   `;
 }
+
+function submitVerifyForm() {
+  const input = document.querySelector('#verifyInput');
+  if (!input) return;
+  const val = input.value.trim();
+  if (!val) {
+    showToast('Please enter a Credential ID.', 'warning');
+    return;
+  }
+  navigate(`/verify/${encodeURIComponent(val)}`);
+}
+window.submitVerifyForm = submitVerifyForm;
 
 function handleBottomVerify() {
   const val = document.querySelector('#bottomVerifyInput')?.value.trim();
@@ -1332,29 +1496,43 @@ async function showRawBlockchainRecordModal(credId) {
 window.showRawBlockchainRecordModal = showRawBlockchainRecordModal;
 window.handleVerify = handleVerify;
 
-// Camera QR Scanner Modal Simulator
+// Camera QR Scanner Modal Simulator & Safe URL Parser
 function showScanModal() {
   const modal = document.createElement('div');
   modal.id = 'scanModal';
-  modal.style = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:grid;place-items:center;padding:20px;backdrop-filter:blur(4px);';
+  modal.style = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:300;display:grid;place-items:center;padding:20px;backdrop-filter:blur(6px);';
   modal.innerHTML = `
-    <div class="card" style="max-width:500px;width:100%;text-align:center;">
-      <h3 style="margin-bottom:12px;">📷 QR Code Scanner</h3>
-      <p style="color:var(--text-secondary);font-size:14px;margin-bottom:20px;">
-        Align the QR code from the academic document within the scanner frame.
+    <div class="card" style="max-width:520px;width:100%;text-align:center;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h3 style="margin:0;font-size:18px;">📷 QR Code Scanner</h3>
+        <button class="btn btn-secondary btn-sm" onclick="document.querySelector('#scanModal').remove()">✕</button>
+      </div>
+      <p style="color:var(--text-secondary);font-size:13px;margin-bottom:18px;">
+        Align the QR code from the academic document within the camera frame below.
       </p>
 
-      <div style="width:240px;height:240px;margin:0 auto 20px;border:3px dashed var(--brand-blue);border-radius:16px;display:grid;place-items:center;background:var(--bg-tertiary);position:relative;">
-        <div style="position:absolute;top:50%;left:0;right:0;height:2px;background:var(--brand-cyan);box-shadow:0 0 8px var(--brand-cyan);"></div>
-        <span style="font-size:13px;color:var(--text-muted);">Optical Scanner Active</span>
+      <div style="width:240px;height:240px;margin:0 auto 16px;border:3px dashed var(--brand-blue);border-radius:16px;display:grid;place-items:center;background:var(--bg-tertiary);position:relative;overflow:hidden;">
+        <div style="position:absolute;top:50%;left:0;right:0;height:2px;background:var(--brand-cyan);box-shadow:0 0 10px var(--brand-cyan);animation:pulse 2s infinite;"></div>
+        <div style="font-size:42px;">📷</div>
+        <span style="font-size:12px;color:var(--text-muted);margin-top:-20px;">Camera Stream Active</span>
+      </div>
+
+      <!-- Paste / Scan Simulation Input -->
+      <div style="margin-bottom:14px;">
+        <label style="font-size:12px;font-weight:700;color:var(--text-secondary);display:block;text-align:left;margin-bottom:4px;">Scan Result / QR Data</label>
+        <div style="display:flex;gap:6px;">
+          <input id="qrScanInput" class="input-text" placeholder="e.g. http://localhost:3000/verify/SANAD-NAD-20269901" value="http://localhost:3000/verify/SANAD-NAD-20269901" />
+          <button class="btn btn-primary btn-sm" onclick="handleQrDataSubmit()">Parse & Verify</button>
+        </div>
+        <div id="qrErrorMsg" style="font-size:12px;color:var(--color-danger);text-align:left;margin-top:4px;"></div>
       </div>
 
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
-        <span style="font-size:12px;font-weight:700;color:var(--text-muted);">OR SELECT A DEMO QR PRESET:</span>
-        <div style="display:flex;gap:8px;justify-content:center;">
-          <button class="btn btn-secondary btn-sm" onclick="selectDemoQr('SANAD-2026-000123')">Valid Degree QR</button>
+        <span style="font-size:11px;font-weight:700;color:var(--text-muted);">OR TEST VERIFIED QR PRESETS:</span>
+        <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
+          <button class="btn btn-secondary btn-sm" onclick="selectDemoQr('SANAD-NAD-20269901')">Valid B.Tech QR</button>
+          <button class="btn btn-secondary btn-sm" onclick="selectDemoQr('SANAD-2026-000123')">Rahul Sharma QR</button>
           <button class="btn btn-secondary btn-sm" onclick="selectDemoQr('SANAD-2026-000124')">Revoked Degree QR</button>
-          <button class="btn btn-secondary btn-sm" onclick="selectDemoQr('SANAD-2026-000125')">DigiLocker QR</button>
         </div>
       </div>
 
@@ -1365,14 +1543,51 @@ function showScanModal() {
 }
 window.showScanModal = showScanModal;
 
+function handleQrDataSubmit() {
+  const input = document.querySelector('#qrScanInput');
+  const err = document.querySelector('#qrErrorMsg');
+  if (!input) return;
+  const raw = input.value.trim();
+
+  if (!raw) {
+    if (err) err.innerText = 'Please scan or enter QR code data.';
+    return;
+  }
+
+  // Safe QR URL Extraction & Validation
+  let extractedId = '';
+  if (raw.startsWith('http://') || raw.startsWith('https://')) {
+    try {
+      const url = new URL(raw);
+      if (url.pathname.includes('/verify/')) {
+        extractedId = url.pathname.split('/verify/')[1]?.replace(/\/$/, '');
+      } else {
+        if (err) err.innerText = 'Unauthorized URL: This QR code does not contain a valid SanadChain verification link.';
+        return;
+      }
+    } catch (e) {
+      if (err) err.innerText = 'Unable to read this QR code URL format.';
+      return;
+    }
+  } else if (raw.startsWith('SANAD-')) {
+    extractedId = raw;
+  } else {
+    if (err) err.innerText = 'Invalid format: Please enter a valid SanadChain Credential ID or QR link.';
+    return;
+  }
+
+  if (extractedId) {
+    const modal = document.querySelector('#scanModal');
+    if (modal) modal.remove();
+    navigate(`/verify/${encodeURIComponent(extractedId)}`);
+  }
+}
+window.handleQrDataSubmit = handleQrDataSubmit;
+
 function selectDemoQr(id) {
   const modal = document.querySelector('#scanModal');
   if (modal) modal.remove();
-  const input = document.querySelector('#verifyInput');
-  if (input) {
-    input.value = id;
-    handleVerify();
-  }
+  navigate(`/verify/${encodeURIComponent(id)}`);
 }
 window.selectDemoQr = selectDemoQr;
 
