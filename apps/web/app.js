@@ -68,20 +68,24 @@ function renderNav() {
 
         <div class="nav-links">
           <a class="nav-link ${currentPath === '/' ? 'active' : ''}" href="/" onclick="navigate('/'); return false;">Home</a>
-          <a class="nav-link ${currentPath.startsWith('/verify') ? 'active' : ''}" href="/verify" onclick="navigate('/verify'); return false;">Public Verification</a>
-          <a class="nav-link ${currentPath === '/ai-detector' ? 'active' : ''}" href="/ai-detector" onclick="navigate('/ai-detector'); return false;">🤖 AI Intelligence</a>
-          <a class="nav-link ${currentPath === '/security-demo' ? 'active' : ''}" href="/security-demo" onclick="navigate('/security-demo'); return false;">Tamper Sandbox</a>
-          <a class="nav-link ${currentPath === '/nad' ? 'active' : ''}" href="/nad" onclick="navigate('/nad'); return false;">🇮🇳 DigiLocker / NAD</a>
-          <a class="nav-link ${currentPath === '/explorer' ? 'active' : ''}" href="/explorer" onclick="navigate('/explorer'); return false;">Ledger Explorer</a>
-          <a class="nav-link ${currentPath === '/onboarding' ? 'active' : ''}" href="/onboarding" onclick="navigate('/onboarding'); return false;">Onboarding</a>
+          <a class="nav-link ${currentPath.startsWith('/verify') ? 'active' : ''}" href="/verify" onclick="navigate('/verify'); return false;">Verify</a>
+          <a class="nav-link ${currentPath === '/how-it-works' ? 'active' : ''}" href="/how-it-works" onclick="navigate('/how-it-works'); return false;">How It Works</a>
+          <a class="nav-link ${currentPath === '/institutions' ? 'active' : ''}" href="/institutions" onclick="navigate('/institutions'); return false;">For Institutions</a>
+          <a class="nav-link ${currentPath === '/employer' ? 'active' : ''}" href="/employer" onclick="navigate('/employer'); return false;">For Employers</a>
+          <a class="nav-link ${currentPath === '/student' ? 'active' : ''}" href="/student" onclick="navigate('/student'); return false;">Student Wallet</a>
+          <a class="nav-link ${currentPath === '/security-demo' ? 'active' : ''}" href="/security-demo" onclick="navigate('/security-demo'); return false;">Security</a>
+          <a class="nav-link ${currentPath === '/ai-detector' ? 'active' : ''}" href="/ai-detector" onclick="navigate('/ai-detector'); return false;">🤖 AI Engine</a>
+          <a class="nav-link ${currentPath === '/nad' ? 'active' : ''}" href="/nad" onclick="navigate('/nad'); return false;">🇮🇳 DigiLocker</a>
+          <a class="nav-link ${currentPath === '/explorer' ? 'active' : ''}" href="/explorer" onclick="navigate('/explorer'); return false;">Explorer</a>
+          <a class="nav-link ${currentPath === '/about' ? 'active' : ''}" href="/about" onclick="navigate('/about'); return false;">About</a>
           ${user ? `<a class="nav-link ${currentPath === '/dashboard' ? 'active' : ''}" href="/dashboard" onclick="navigate('/dashboard'); return false;">Console</a>` : ''}
         </div>
 
         <div class="nav-actions">
-          <button class="btn-icon" onclick="toggleThemeModal()" title="Toggle Theme">◐</button>
+          <button class="btn-icon" onclick="toggleThemeModal()" title="Toggle Theme (Light / Dark / System)">◐</button>
           
           <button class="btn btn-judge btn-sm" onclick="navigate('/judge-demo')">
-            ★ Judge Demo Tour
+            ★ Judge Demo
           </button>
 
           ${user ? `
@@ -2535,6 +2539,326 @@ async function handleIssueSubmit(e) {
 window.handleIssueSubmit = handleIssueSubmit;
 
 // ==========================================================
+// 8B. HOW IT WORKS (ARCHITECTURE & PROCESS DEEP-DIVE)
+// ==========================================================
+function renderHowItWorks() {
+  return `
+    ${renderNav()}
+    <main class="wrap" style="max-width:1000px;margin:30px auto 60px;">
+      <div style="text-align:center;margin-bottom:36px;">
+        <div class="eyebrow">Cryptographic Architecture</div>
+        <h1 style="font-size:38px;letter-spacing:-0.03em;margin-bottom:10px;">
+          How SanadChain Works
+        </h1>
+        <p style="color:var(--text-secondary);font-size:16px;max-width:680px;margin:0 auto;">
+          A 5-step decentralized verification pipeline enabling instant trust without contacting issuing universities or exposing student privacy.
+        </p>
+      </div>
+
+      <!-- 5-STEP VISUAL PIPELINE -->
+      <div class="card" style="margin-bottom:30px;">
+        <h3 style="font-size:20px;text-align:center;margin-bottom:24px;">The 5-Step Academic Trust Lifecycle</h3>
+        
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:20px;">
+          <div style="background:var(--bg-tertiary);padding:20px;border-radius:12px;border-top:4px solid var(--brand-blue);">
+            <div style="font-size:13px;font-weight:800;color:var(--brand-blue);margin-bottom:4px;">STEP 1 · ISSUANCE & FORMATTING</div>
+            <h4 style="font-size:16px;margin-bottom:8px;">Academic Record Generation</h4>
+            <p style="color:var(--text-secondary);font-size:13px;line-height:1.5;">
+              The university registrar inputs student graduation data or imports records from DigiLocker/NAD. Full documents stay safely encrypted off-chain.
+            </p>
+          </div>
+
+          <div style="background:var(--bg-tertiary);padding:20px;border-radius:12px;border-top:4px solid var(--brand-cyan);">
+            <div style="font-size:13px;font-weight:800;color:var(--brand-cyan);margin-bottom:4px;">STEP 2 · CRYPTOGRAPHIC DIGEST</div>
+            <h4 style="font-size:16px;margin-bottom:8px;">SHA-256 Hash Computation</h4>
+            <p style="color:var(--text-secondary);font-size:13px;line-height:1.5;">
+              A unique 256-bit cryptographic digest is calculated. Modifying even a single character in the certificate produces a completely different hash.
+            </p>
+          </div>
+
+          <div style="background:var(--bg-tertiary);padding:20px;border-radius:12px;border-top:4px solid var(--brand-purple);">
+            <div style="font-size:13px;font-weight:800;color:var(--brand-purple);margin-bottom:4px;">STEP 3 · DIGITAL SIGNATURE</div>
+            <h4 style="font-size:16px;margin-bottom:8px;">Registrar MSP Signing</h4>
+            <p style="color:var(--text-secondary);font-size:13px;line-height:1.5;">
+              The registrar signs the SHA-256 hash using the institution's elliptic curve private key (ECDSA), establishing non-repudiation and provenance.
+            </p>
+          </div>
+
+          <div style="background:var(--bg-tertiary);padding:20px;border-radius:12px;border-top:4px solid var(--color-success);">
+            <div style="font-size:13px;font-weight:800;color:var(--color-success);margin-bottom:4px;">STEP 4 · BLOCKCHAIN ANCHOR</div>
+            <h4 style="font-size:16px;margin-bottom:8px;">Hyperledger Fabric Block Commit</h4>
+            <p style="color:var(--text-secondary);font-size:13px;line-height:1.5;">
+              The hash, signature, and metadata are submitted to <b>sanadchannel</b>, endorsed by peer nodes, and committed via Raft multi-org consensus.
+            </p>
+          </div>
+
+          <div style="background:var(--bg-tertiary);padding:20px;border-radius:12px;border-top:4px solid var(--brand-blue);grid-column:span 2;">
+            <div style="font-size:13px;font-weight:800;color:var(--brand-blue);margin-bottom:4px;">STEP 5 · ZERO-LOGIN PUBLIC VERIFICATION</div>
+            <h4 style="font-size:16px;margin-bottom:8px;">Sub-Second Verification & QR Resolution</h4>
+            <p style="color:var(--text-secondary);font-size:13px;line-height:1.5;">
+              Employers scan the printed QR or query the Credential ID. The system queries the blockchain ledger in real-time and returns VALID, TAMPERED, or REVOKED in under 1 second.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE CTA BUTTONS -->
+      <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="navigate('/verify')">Test Live Public Verification →</button>
+        <button class="btn btn-secondary" onclick="navigate('/security-demo')">Launch Tamper Sandbox →</button>
+      </div>
+    </main>
+    ${renderFooter()}
+  `;
+}
+window.renderHowItWorks = renderHowItWorks;
+
+// ==========================================================
+// 8C. FOR INSTITUTIONS (UNIVERSITIES & AUTONOMOUS COLLEGES)
+// ==========================================================
+function renderForInstitutions() {
+  return `
+    ${renderNav()}
+    <main class="wrap" style="max-width:1000px;margin:30px auto 60px;">
+      <div style="text-align:center;margin-bottom:36px;">
+        <div class="eyebrow">Institutional Trust Layer</div>
+        <h1 style="font-size:38px;letter-spacing:-0.03em;margin-bottom:10px;">
+          SanadChain for Universities & Colleges
+        </h1>
+        <p style="color:var(--text-secondary);font-size:16px;max-width:680px;margin:0 auto;">
+          Empowering Central/State Universities and autonomous colleges to issue tamper-evident credentials without building costly private blockchain networks.
+        </p>
+      </div>
+
+      <div class="grid-3" style="margin-bottom:30px;">
+        <div class="card">
+          <div style="font-size:28px;margin-bottom:8px;">🏛️</div>
+          <h3 style="font-size:18px;margin-bottom:6px;">Zero Verification Backlog</h3>
+          <p style="color:var(--text-secondary);font-size:13px;">
+            Eliminates weeks of manual registrar email exchanges. Employers verify certificates independently through cryptographic proofs.
+          </p>
+        </div>
+
+        <div class="card">
+          <div style="font-size:28px;margin-bottom:8px;">⚡</div>
+          <h3 style="font-size:18px;margin-bottom:6px;">5-Step College Onboarding</h3>
+          <p style="color:var(--text-secondary);font-size:13px;">
+            Autonomous colleges can register online, undergo governance review, and receive provisioned MSP identities in minutes.
+          </p>
+        </div>
+
+        <div class="card">
+          <div style="font-size:28px;margin-bottom:8px;">🇮🇳</div>
+          <h3 style="font-size:18px;margin-bottom:6px;">DigiLocker / NAD Interoperable</h3>
+          <p style="color:var(--text-secondary);font-size:13px;">
+            Automatically pushes issued degrees to students' government DigiLocker wallets with official URI references.
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Card -->
+      <div class="card" style="background:var(--bg-tertiary);text-align:center;padding:30px;">
+        <h3 style="font-size:22px;margin-bottom:8px;">Ready to Onboard Your Institution?</h3>
+        <p style="color:var(--text-secondary);font-size:14px;max-width:540px;margin:0 auto 20px;">
+          Join over 340+ participating institutions on the SanadChain federated academic trust mesh.
+        </p>
+        <div style="display:flex;justify-content:center;gap:12px;">
+          <button class="btn btn-primary" onclick="navigate('/onboarding')">Launch Onboarding Wizard →</button>
+          <button class="btn btn-secondary" onclick="navigate('/login')">Institution Admin Login</button>
+        </div>
+      </div>
+    </main>
+    ${renderFooter()}
+  `;
+}
+window.renderForInstitutions = renderForInstitutions;
+
+// ==========================================================
+// 8D. FOR EMPLOYERS (BACKGROUND VERIFICATION & HR)
+// ==========================================================
+function renderForEmployers() {
+  return `
+    ${renderNav()}
+    <main class="wrap" style="max-width:1000px;margin:30px auto 60px;">
+      <div style="text-align:center;margin-bottom:36px;">
+        <div class="eyebrow">Enterprise Recruitment Trust</div>
+        <h1 style="font-size:38px;letter-spacing:-0.03em;margin-bottom:10px;">
+          Instant Candidate Verification for Employers
+        </h1>
+        <p style="color:var(--text-secondary);font-size:16px;max-width:680px;margin:0 auto;">
+          Verify academic qualifications in under 1 second. Protect your organization from forged marksheets and unaccredited diploma mills.
+        </p>
+      </div>
+
+      <div class="grid-3" style="margin-bottom:30px;">
+        <div class="card">
+          <div style="font-size:28px;margin-bottom:8px;">🔓</div>
+          <h3 style="font-size:18px;margin-bottom:6px;">No Login Required</h3>
+          <p style="color:var(--text-secondary);font-size:13px;">
+            Verify any candidate credential instantly by ID, QR code, or direct PDF/marksheet upload without creating an account.
+          </p>
+        </div>
+
+        <div class="card">
+          <div style="font-size:28px;margin-bottom:8px;">🤖</div>
+          <h3 style="font-size:18px;margin-bottom:6px;">AI Anomaly & Fraud Scoring</h3>
+          <p style="color:var(--text-secondary);font-size:13px;">
+            Detects statistically altered CGPA outliers, invalid roll number formats, and institutions on the UGC Fake University Watchlist.
+          </p>
+        </div>
+
+        <div class="card">
+          <div style="font-size:28px;margin-bottom:8px;">⏱</div>
+          <h3 style="font-size:18px;margin-bottom:6px;">Sub-Second Background Checks</h3>
+          <p style="color:var(--text-secondary);font-size:13px;">
+            Replace 3-week registrar delays with instant cryptographic verification anchored to Hyperledger Fabric.
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Card -->
+      <div class="card" style="background:var(--bg-tertiary);text-align:center;padding:30px;">
+        <h3 style="font-size:22px;margin-bottom:8px;">Verify a Candidate Right Now</h3>
+        <p style="color:var(--text-secondary);font-size:14px;max-width:540px;margin:0 auto 20px;">
+          Test with candidate benchmark credential <b>SANAD-NAD-20269901</b> or upload a degree document.
+        </p>
+        <div style="display:flex;justify-content:center;gap:12px;">
+          <button class="btn btn-primary" onclick="navigate('/verify')">Open Verification Portal →</button>
+          <button class="btn btn-secondary" onclick="navigate('/verify/SANAD-NAD-20269901')">Verify Benchmark Degree</button>
+        </div>
+      </div>
+    </main>
+    ${renderFooter()}
+  `;
+}
+window.renderForEmployers = renderForEmployers;
+
+// ==========================================================
+// 8E. STUDENT ACADEMIC CREDENTIAL WALLET
+// ==========================================================
+function renderStudentPortal() {
+  return `
+    ${renderNav()}
+    <main class="wrap" style="max-width:960px;margin:30px auto 60px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:14px;">
+        <div>
+          <div class="eyebrow">Self-Sovereign Academic Wallet</div>
+          <h1 style="font-size:32px;letter-spacing:-0.03em;margin:0;">
+            Student Credential Vault
+          </h1>
+          <p style="color:var(--text-secondary);font-size:14px;margin-top:4px;">
+            Graduate: <b>Rahul Sharma</b> (Ref: <code>STU-2026-00123</code> · ABC University of Technology)
+          </p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="showCertificateModal('SANAD-NAD-20269901')">
+          📄 View Printable Degree Certificate
+        </button>
+      </div>
+
+      <!-- My Credentials Cards -->
+      <div class="card" style="margin-bottom:24px;">
+        <h3 style="font-size:18px;margin-bottom:14px;">My Blockchain-Anchored Credentials</h3>
+        
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <!-- Credential 1 -->
+          <div style="background:var(--bg-tertiary);border:1px solid var(--border-light);border-radius:12px;padding:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <span class="badge badge-success">ACTIVE · VALID</span>
+                <span class="badge badge-blue">🇮🇳 DigiLocker / NAD</span>
+              </div>
+              <h4 style="font-size:18px;margin-bottom:4px;">Bachelor of Technology in Computer Science & Engineering</h4>
+              <div style="font-size:13px;color:var(--text-secondary);">ABC University of Technology · Class of 2026 (CGPA 9.24 / 10.0)</div>
+              <div class="mono" style="font-size:12px;color:var(--brand-blue);margin-top:6px;">ID: SANAD-NAD-20269901 · Block #1848</div>
+            </div>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn btn-primary btn-sm" onclick="navigate('/verify/SANAD-NAD-20269901')">🔍 Public Proof Link</button>
+              <button class="btn btn-secondary btn-sm" onclick="showCertificateModal('SANAD-NAD-20269901')">📄 Certificate</button>
+              <button class="btn btn-secondary btn-sm" onclick="syncToDigiLocker('SANAD-NAD-20269901')">🇮🇳 Sync DigiLocker</button>
+            </div>
+          </div>
+
+          <!-- Credential 2 -->
+          <div style="background:var(--bg-tertiary);border:1px solid var(--border-light);border-radius:12px;padding:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <span class="badge badge-success">ACTIVE · VALID</span>
+              </div>
+              <h4 style="font-size:18px;margin-bottom:4px;">Official Degree Record (Rahul Sharma)</h4>
+              <div style="font-size:13px;color:var(--text-secondary);">ABC University of Technology · Computer Science Department</div>
+              <div class="mono" style="font-size:12px;color:var(--brand-blue);margin-top:6px;">ID: SANAD-2026-000123 · Block #1842</div>
+            </div>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn btn-primary btn-sm" onclick="navigate('/verify/SANAD-2026-000123')">🔍 Public Proof Link</button>
+              <button class="btn btn-secondary btn-sm" onclick="showCertificateModal('SANAD-2026-000123')">📄 Certificate</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    ${renderFooter()}
+  `;
+}
+window.renderStudentPortal = renderStudentPortal;
+
+// ==========================================================
+// 8F. ABOUT SANADCHAIN & NATIONAL TRUST
+// ==========================================================
+function renderAbout() {
+  return `
+    ${renderNav()}
+    <main class="wrap" style="max-width:960px;margin:30px auto 60px;">
+      <div style="text-align:center;margin-bottom:36px;">
+        <div class="eyebrow">National Academic Trust Platform</div>
+        <h1 style="font-size:38px;letter-spacing:-0.03em;margin-bottom:10px;">
+          About SANADCHAIN
+        </h1>
+        <p style="color:var(--text-secondary);font-size:16px;max-width:680px;margin:0 auto;">
+          "Trust Every Credential. Verify in Seconds."
+        </p>
+      </div>
+
+      <div class="card" style="margin-bottom:24px;">
+        <h3 style="font-size:20px;margin-bottom:12px;">Our Mission</h3>
+        <p style="color:var(--text-secondary);font-size:14px;line-height:1.6;margin-bottom:14px;">
+          SanadChain is an enterprise-grade academic verification platform designed to solve the systemic challenges of fake degree certificates, fraudulent marksheets, and weeks-long manual registrar verification delays across higher education and recruitment.
+        </p>
+        <p style="color:var(--text-secondary);font-size:14px;line-height:1.6;margin:0;">
+          By establishing a federated trust mesh on <b>Hyperledger Fabric</b> and bridging directly with India's <b>DigiLocker / National Academic Depository (NAD)</b>, SanadChain allows universities to anchor tamper-evident credentials and employers to verify them in sub-second time without contacting the issuing institution.
+        </p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+        <div class="card">
+          <h4 style="font-size:16px;color:var(--brand-blue);margin-bottom:8px;">🔒 Privacy by Design</h4>
+          <p style="color:var(--text-secondary);font-size:13px;line-height:1.5;margin:0;">
+            No student personally identifiable information (Aadhaar, phone, address) is ever placed on the immutable blockchain ledger. Only cryptographic SHA-256 hashes, ECDSA digital signatures, and status metadata are anchored.
+          </p>
+        </div>
+
+        <div class="card">
+          <h4 style="font-size:16px;color:var(--brand-cyan);margin-bottom:8px;">🏛️ Built for All Institutions</h4>
+          <p style="color:var(--text-secondary);font-size:13px;line-height:1.5;margin:0;">
+            Smaller autonomous colleges and institutes can join the network via the self-serve onboarding wizard without managing expensive custom blockchain nodes.
+          </p>
+        </div>
+      </div>
+
+      <div class="card" style="background:var(--bg-tertiary);text-align:center;padding:24px;">
+        <h4 style="font-size:18px;margin-bottom:6px;">Standard Compliance & References</h4>
+        <p style="color:var(--text-secondary);font-size:13px;margin:0;">
+          Grounded in MeitY / NIC CERTICHAIN guidelines, W3C Verifiable Credentials, and Hyperledger Fabric 2.5 LTS.
+        </p>
+      </div>
+    </main>
+    ${renderFooter()}
+  `;
+}
+window.renderAbout = renderAbout;
+
+// ==========================================================
 // 8. PRINTABLE OFFICIAL CERTIFICATE MODAL
 // ==========================================================
 async function showCertificateModal(credId) {
@@ -3277,6 +3601,16 @@ function render() {
     const credId = path.split('/')[2];
     app.innerHTML = renderVerify(credId);
     setTimeout(() => handleVerify(), 100);
+  } else if (path === '/how-it-works') {
+    app.innerHTML = renderHowItWorks();
+  } else if (path === '/institutions' || path === '/for-institutions' || path === '/institution') {
+    app.innerHTML = renderForInstitutions();
+  } else if (path === '/employer' || path === '/for-employers') {
+    app.innerHTML = renderForEmployers();
+  } else if (path === '/student') {
+    app.innerHTML = renderStudentPortal();
+  } else if (path === '/about') {
+    app.innerHTML = renderAbout();
   } else if (path === '/ai-detector' || path === '/ai') {
     renderAiDetector();
   } else if (path === '/security-demo' || path === '/security') {
@@ -3284,13 +3618,13 @@ function render() {
     setTimeout(() => calculateSandboxHash(), 100);
   } else if (path === '/login') {
     app.innerHTML = renderLogin();
-  } else if (path === '/dashboard' || path === '/console') {
+  } else if (path === '/dashboard' || path === '/console' || path === '/admin') {
     renderDashboard();
   } else if (path === '/issue') {
     app.innerHTML = renderIssue();
-  } else if (path === '/explorer') {
+  } else if (path === '/explorer' || path === '/blockchain') {
     renderExplorer();
-  } else if (path === '/nad') {
+  } else if (path === '/nad' || path === '/integrations') {
     renderNad();
   } else if (path === '/onboarding') {
     app.innerHTML = renderOnboarding();
