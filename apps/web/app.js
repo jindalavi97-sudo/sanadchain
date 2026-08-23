@@ -9,11 +9,20 @@ const API = '/api';
 // State Management
 let currentUser = JSON.parse(localStorage.getItem('sanad_user') || 'null');
 let authToken = localStorage.getItem('sanad_token') || '';
-let theme = 'dark';
+let theme = localStorage.getItem('sanad_theme') || 'dark';
 let digiLockerLinked = localStorage.getItem('sanad_dl_linked') === 'true';
 
-// Permanent Pure Dark Theme
-document.body.classList.add('dark');
+// Apply Theme
+function applyTheme(t) {
+  theme = t;
+  localStorage.setItem('sanad_theme', theme);
+  if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.body.classList.add('dark');
+  } else {
+    document.body.classList.remove('dark');
+  }
+}
+applyTheme(theme);
 
 // Navigation & Routing
 function navigate(path) {
@@ -53,7 +62,7 @@ function renderNav() {
     <nav class="nav">
       <div class="wrap nav-container">
         <a class="brand" href="/" onclick="navigate('/'); return false;">
-          <div class="user-avatar-gradient" style="width:34px;height:34px;font-size:16px;">S</div>
+          <div class="brand-icon">S</div>
           <div>SANADCHAIN <span class="nav-badge">ENTERPRISE</span></div>
         </a>
 
@@ -73,6 +82,8 @@ function renderNav() {
         </div>
 
         <div class="nav-actions">
+          <button class="btn-icon" onclick="toggleThemeModal()" title="Toggle Theme (Light / Dark / System)">◐</button>
+          
           <button class="btn btn-judge btn-sm" onclick="navigate('/judge-demo')">
             ★ Judge Demo
           </button>
@@ -109,6 +120,13 @@ function renderFooter() {
       ★ Launch Judge Demo
     </div>
   `;
+}
+
+// Theme Toggle
+function toggleThemeModal() {
+  const nextTheme = theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light';
+  applyTheme(nextTheme);
+  showToast(`Theme switched to: ${nextTheme.toUpperCase()}`, 'info');
 }
 
 // Auth Helpers
